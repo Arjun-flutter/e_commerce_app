@@ -13,12 +13,12 @@ Widget settingTile(IconData icon, String title, bool activate, VoidCallback onTa
           leading: Icon(
             icon,
             color: activate ? Colors.orange : Colors.grey,
-            size: 18,
+            size: 20,
           ),
           title: Text(
             title, 
             style: TextStyle(
-              fontSize: 14
+              fontSize: 15
               )
               ),
           trailing: Icon(

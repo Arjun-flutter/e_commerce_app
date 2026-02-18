@@ -1,17 +1,19 @@
-import 'package:ecommer_app/models/accounttile.dart';
+import 'package:ecommer_app/widgets/accounttile.dart';
 import 'package:ecommer_app/provider/auth_provider.dart';
 import 'package:ecommer_app/screens/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Accountscreen extends StatefulWidget {
-  const Accountscreen({super.key});
+import 'home_screen.dart';
+
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key});
 
   @override
-  AccountscreenState createState() => AccountscreenState();
+  AccountScreenState createState() => AccountScreenState();
 }
 
-class AccountscreenState extends State<Accountscreen> {
+class AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +48,11 @@ class AccountscreenState extends State<Accountscreen> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => HomeScreen()),
+                              );
+
                             },
                             child: Icon(Icons.arrow_back),
                           ),
@@ -104,15 +110,40 @@ class AccountscreenState extends State<Accountscreen> {
                   ),
                   child: Column(
                     children: [
-                      settingTile(Icons.person, "Edit Profile", false,  () {}),
-                      settingTile(Icons.mail, "nagarjuna@gmail.com", false,  () {}),
-                      settingTile(Icons.location_on, "Shopping Address", false,  () {}),
-                      settingTile(Icons.favorite, "Favorites", false,  () {}),
-                      settingTile(Icons.history_edu, "My Orders", false,  () {}),
-                      settingTile(Icons.notifications, "Notification", false,  () {}),
-                      settingTile(Icons.credit_card, "Cards", false,  () {}),
-                      settingTile(Icons.help_center, "Help Center", false,  () {}),
-                      settingTile(Icons.policy, "Terms & Conditions", false,  () {}),
+                      settingTile(Icons.person, "Edit Profile", false, () {}),
+                      settingTile(
+                        Icons.mail,
+                        "nagarjuna@gmail.com",
+                        false,
+                        () {},
+                      ),
+                      settingTile(
+                        Icons.location_on,
+                        "Shopping Address",
+                        false,
+                        () {},
+                      ),
+                      settingTile(Icons.favorite, "Favorites", false, () {}),
+                      settingTile(Icons.history_edu, "My Orders", false, () {}),
+                      settingTile(
+                        Icons.notifications,
+                        "Notification",
+                        false,
+                        () {},
+                      ),
+                      settingTile(Icons.credit_card, "Cards", false, () {}),
+                      settingTile(
+                        Icons.help_center,
+                        "Help Center",
+                        false,
+                        () {},
+                      ),
+                      settingTile(
+                        Icons.policy,
+                        "Terms & Conditions",
+                        false,
+                        () {},
+                      ),
                     ],
                   ),
                 ),
@@ -122,11 +153,11 @@ class AccountscreenState extends State<Accountscreen> {
                     settingTile(Icons.logout, "Log Out", true, () {
                       context.read<AuthProvider>().logOut();
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (_) => Loginscreen()),
-                            (route) => false,
+                        MaterialPageRoute(builder: (_) => LoginScreen()),
+                        (route) => false,
                       );
                     }),
-                    settingTile(Icons.delete, "Delete Account", false,  () {}),
+                    settingTile(Icons.delete, "Delete Account", false, () {}),
                   ],
                 ),
               ],

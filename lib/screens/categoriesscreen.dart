@@ -35,7 +35,7 @@ class CategoriesScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (_) =>
-                      Categorieslistscreen(categoryName: category.name),
+                      CategoriesListScreen(categoryName: category.name),
                 ),
               );
             },
@@ -60,7 +60,6 @@ class CategoriesScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 15, color: Colors.black54),
                       ),
                     ),
-
                     Positioned(
                       bottom: -10,
                       right: -1,

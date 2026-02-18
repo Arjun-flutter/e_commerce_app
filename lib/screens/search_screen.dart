@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<ProductMeta> values;
+
   const SearchScreen({super.key, required this.values});
 
   @override
@@ -20,7 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final product = context.watch<ProductProvider>();
-final carprv = context.watch<CartProvider>();
+    final carprv = context.watch<CartProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Container(
@@ -205,7 +206,7 @@ final carprv = context.watch<CartProvider>();
                                         ),
                                       ),
                                       onPressed: () {
-                                        carprv.addToCart(p);                                                                            
+                                        carprv.addToCart(p);
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
@@ -218,7 +219,7 @@ final carprv = context.watch<CartProvider>();
                                         );
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (_) => const Cartscreen(),
+                                            builder: (_) => const CartScreen(),
                                           ),
                                         );
                                       },

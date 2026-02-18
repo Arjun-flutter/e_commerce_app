@@ -4,14 +4,14 @@ import 'package:ecommer_app/provider/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Cartscreen extends StatefulWidget {
-  const Cartscreen({super.key});
+class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
 
   @override
-  State<Cartscreen> createState() => _CartscreenState();
+  State<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartscreenState extends State<Cartscreen> {
+class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartprv = context.watch<CartProvider>();
@@ -148,8 +148,7 @@ class _CartscreenState extends State<Cartscreen> {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border(
-                      top: BorderSide(color: Colors.orange)),
+                    border: Border(top: BorderSide(color: Colors.orange)),
                   ),
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -160,7 +159,7 @@ class _CartscreenState extends State<Cartscreen> {
                           "Total",
                           style: TextStyle(
                             fontSize: 16,
-                           fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(

@@ -32,6 +32,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
     final cartprv = context.watch<CartProvider>();
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: RichText(
@@ -68,7 +69,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => Cartscreen()),
+                      MaterialPageRoute(builder: (_) => CartScreen()),
                     );
                   },
                   icon: Icon(Icons.shopping_cart),
@@ -83,14 +84,9 @@ class _AppHomescreenState extends State<AppHomescreen> {
                       width: 16,
                       decoration: BoxDecoration(
                         color: Colors.orange,
-                        borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Center(
-                        child: Text(
-                          "${cartprv.cartItems.length}",
-                           
-                           ),
-                      ),
+                      child: Center(child: Text("${cartprv.cartItems.length}")),
                     ),
                   ),
               ],
@@ -115,6 +111,8 @@ class _AppHomescreenState extends State<AppHomescreen> {
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(vertical: 8),
                 hintText: "Search",
+                filled: true,
+                fillColor: Colors.grey.withOpacity(0.1),
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(7),
                   child: CircleAvatar(
@@ -161,7 +159,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => Categorieslistscreen(
+                              builder: (_) => CategoriesListScreen(
                                 categoryName: category.name,
                               ),
                             ),
@@ -201,9 +199,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
           SizedBox(height: 15),
           Expanded(
             child: product.isLoading
-                ? Center(
-                  child: CircularProgressIndicator()
-                  )
+                ? Center(child: CircularProgressIndicator())
                 : GridView.builder(
                     itemCount: product.products.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -249,7 +245,6 @@ class _AppHomescreenState extends State<AppHomescreen> {
                                       height: 150,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        // color: Colors.black,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Hero(

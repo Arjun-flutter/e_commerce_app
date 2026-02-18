@@ -6,7 +6,7 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isLoggedIn => _isLoggedIn;
   String get userName => _userName;
-
+// Login Logic
   bool logIn(String email, String password) {
     if (email.isNotEmpty &&
         email.contains("@") &&
@@ -19,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
     }
     return false;
   }
-
+// Register Logic
   bool register(String name, String email, String password) {
     if (name.isEmpty || !email.contains("@") || password.length < 6) {
       return false;
@@ -28,7 +28,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
-
+// LogOut
   void logOut() {
     _isLoggedIn = false;
     notifyListeners();

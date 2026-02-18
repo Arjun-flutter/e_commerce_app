@@ -34,7 +34,7 @@ final List<Category> categoryList = [
     ),
   Category(
     name: "Kids",
-    apiCategory: "mens-shirts",
+    apiCategory: "kids-shirts",
     image: "assets/images/kids.png"
      ),
 ];

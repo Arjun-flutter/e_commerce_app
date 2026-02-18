@@ -5,14 +5,14 @@ import 'package:ecommer_app/screens/registerscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Loginscreen extends StatefulWidget {
-  const Loginscreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<Loginscreen> createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<Loginscreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   bool isSelected = true;
@@ -40,21 +40,39 @@ class _LoginScreenState extends State<Loginscreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 190, left: 10),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.2,
+                      ),
                       child: Text(
                         "Welcome",
-                        style: TextStyle(color: Colors.orange, fontSize: 35),
+                        style: TextStyle(color: Colors.white, fontSize: 35, shadows: [
+                          Shadow(
+                            blurRadius: 10,
+                            color: Colors.black54,
+                            offset: Offset(2, 2),
+                          ),
+                        ],),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.13),
                     TextFormField(
                       controller: email,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.email, color: Color(0xFF0F3057),),
                         labelText: "Email",
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.pink),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
@@ -63,11 +81,23 @@ class _LoginScreenState extends State<Loginscreen> {
                       obscureText: isSelected,
                       controller: password,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.password),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.password,color: Color(0xFF0F3057)),
                         labelText: "Password",
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.pink),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            isSelected ? Icons.visibility_off : Icons.visibility,
+                            isSelected
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                           ),
                           onPressed: () {
                             setState(() {
@@ -118,7 +148,9 @@ class _LoginScreenState extends State<Loginscreen> {
                         },
                         child: InkWell(
                           onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => HomeScreen(),
+                            ),
                           ),
                           child: Text(
                             "Login",
@@ -138,14 +170,14 @@ class _LoginScreenState extends State<Loginscreen> {
                           TextButton(
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => Registerscreen(),
+                                builder: (context) => RegisterScreen(),
                               ),
                             ),
                             child: Text(
                               "Register",
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
-                                color: Colors.blue,
+                                color: Colors.orange,
                               ),
                             ),
                           ),

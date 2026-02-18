@@ -1,8 +1,24 @@
 import 'package:ecommer_app/screens/loginscreen.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => LoginScreen()));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +29,9 @@ class SplashScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           image: DecorationImage(
-            image: AssetImage("images/image1.png"),
+            image: AssetImage("assets/images/image1.png"),
             fit: BoxFit.cover,
-            opacity: 0.9,
+            opacity: 0.3,
           ),
         ),
         child: Column(
@@ -23,26 +39,15 @@ class SplashScreen extends StatelessWidget {
           children: [
             Icon(
                 Icons.shopping_cart,
-                size: 250,
-                color: Color(0xFFE00425)
+                size: 250, color: Color(0xFFE00425)
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                  backgroundColor: Colors.white
-              ),
-              onPressed: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute(builder: (_) => Loginscreen()));
-              },
-              child: Text(
-                "DP SHOP",
-                style: TextStyle(
-                  color: Colors.orange,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
+            Text(
+              "DP SHOP",
+              style: TextStyle(
+                color: Colors.orange,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ],

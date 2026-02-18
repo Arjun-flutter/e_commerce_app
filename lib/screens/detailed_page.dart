@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 class DetailedPage extends StatefulWidget {
   final Product itemss;
   final ProductMeta app;
+
   const DetailedPage({super.key, required this.itemss, required this.app});
 
   @override
@@ -19,6 +20,7 @@ class _DetailedPageState extends State<DetailedPage> {
   int currentIndex = 0;
   int selectedcolorIndex = 1;
   int selectedsizeIndex = 1;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -27,7 +29,7 @@ class _DetailedPageState extends State<DetailedPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Detail Product",
+          "Product Details",
           style: TextStyle(
             color: Colors.black,
             fontSize: 25,
@@ -43,7 +45,7 @@ class _DetailedPageState extends State<DetailedPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => Cartscreen()),
+                      MaterialPageRoute(builder: (_) => CartScreen()),
                     );
                   },
                   icon: Icon(Icons.shopping_cart),
@@ -380,7 +382,7 @@ class _DetailedPageState extends State<DetailedPage> {
           );
           Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const Cartscreen()));
+          ).push(MaterialPageRoute(builder: (_) => const CartScreen()));
         },
         elevation: 0,
         backgroundColor: Colors.white,

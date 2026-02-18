@@ -3,14 +3,14 @@ import 'package:ecommer_app/screens/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Registerscreen extends StatefulWidget {
-  const Registerscreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<Registerscreen> createState() => _RegisterscreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterscreenState extends State<Registerscreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -41,18 +41,43 @@ class _RegisterscreenState extends State<Registerscreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 170, left: 10),
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.2,
+                      ),
                       child: Text(
                         "Create \nAccount",
-                        style: TextStyle(color: Colors.white, fontSize: 35),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 10,
+                              color: Colors.black54,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 30),
                     TextFormField(
                       controller: name,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Color(0xFF0F3057),
+                        ),
                         labelText: "Name",
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(20),
@@ -63,8 +88,18 @@ class _RegisterscreenState extends State<Registerscreen> {
                     TextFormField(
                       controller: email,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.email, color: Color(0xFF0F3057)),
                         labelText: "Email",
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.pink),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                           borderRadius: BorderRadius.circular(20),
@@ -76,8 +111,21 @@ class _RegisterscreenState extends State<Registerscreen> {
                       obscureText: isSelected,
                       controller: password,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.password),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: Color(0xFF0F3057),
+                        ),
                         labelText: "Password",
+                        filled: true,
+                        fillColor: Colors.white,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.pink),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
                             isSelected
@@ -152,14 +200,14 @@ class _RegisterscreenState extends State<Registerscreen> {
                           TextButton(
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => Loginscreen(),
+                                builder: (context) => LoginScreen(),
                               ),
                             ),
                             child: Text(
                               "Login",
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
-                                color: Colors.blue,
+                                color: Colors.orange,
                               ),
                             ),
                           ),

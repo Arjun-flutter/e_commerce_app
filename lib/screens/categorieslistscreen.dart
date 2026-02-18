@@ -5,10 +5,10 @@ import 'package:ecommer_app/screens/detailed_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Categorieslistscreen extends StatelessWidget {
+class CategoriesListScreen extends StatelessWidget {
   final String categoryName;
 
-  const Categorieslistscreen({super.key, required this.categoryName});
+  const CategoriesListScreen({super.key, required this.categoryName});
 
   @override
   Widget build(BuildContext context) {

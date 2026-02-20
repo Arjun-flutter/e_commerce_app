@@ -45,7 +45,7 @@ class _DetailedPageState extends State<DetailedPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => CartScreen()),
+                      MaterialPageRoute(builder: (_) => CartScreen(value: ecommerceApp)),
                     );
                   },
                   icon: Icon(Icons.shopping_cart),
@@ -382,7 +382,9 @@ class _DetailedPageState extends State<DetailedPage> {
           );
           Navigator.of(
             context,
-          ).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+          ).push(MaterialPageRoute(builder: (_) =>  CartScreen(value: ecommerceApp)));
+
+
         },
         elevation: 0,
         backgroundColor: Colors.white,
@@ -421,15 +423,15 @@ class _DetailedPageState extends State<DetailedPage> {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.black,
+                      color: Colors.orange,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
-                      "BUY NOW",
+                      "BUY at  \$${widget.itemss.price}",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                       // fontWeight: FontWeight.bold,
+                        color: Colors.black,
                         letterSpacing: -1,
                       ),
                     ),

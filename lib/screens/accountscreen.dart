@@ -17,7 +17,7 @@ class AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.grey.shade500,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -35,7 +35,7 @@ class AccountScreenState extends State<AccountScreen> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.shade200,
+                        color: Colors.black.withOpacity(0.15),
                         blurRadius: 10,
                         spreadRadius: 2,
                       ),
@@ -52,7 +52,6 @@ class AccountScreenState extends State<AccountScreen> {
                                 context,
                                 MaterialPageRoute(builder: (_) => HomeScreen()),
                               );
-
                             },
                             child: Icon(Icons.arrow_back),
                           ),
@@ -106,42 +105,47 @@ class AccountScreenState extends State<AccountScreen> {
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(10),
-                    boxShadow: [BoxShadow(color: Colors.white, blurRadius: 3)],
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 3,
+                      ),
+                    ],
                   ),
                   child: Column(
                     children: [
-                      settingTile(Icons.person, "Edit Profile", false, () {}),
+                      settingTile(Icons.person, "Edit Profile", Colors.orange, () {}),
                       settingTile(
                         Icons.mail,
                         "nagarjuna@gmail.com",
-                        false,
+                        Colors.black,
                         () {},
                       ),
                       settingTile(
                         Icons.location_on,
                         "Shopping Address",
-                        false,
+                        Colors.blue,
                         () {},
                       ),
-                      settingTile(Icons.favorite, "Favorites", false, () {}),
-                      settingTile(Icons.history_edu, "My Orders", false, () {}),
+                      settingTile(Icons.favorite, "Favorites", Color(0xFFD32F2F), () {}),
+                      settingTile(Icons.history_edu, "My Orders", Colors.green, () {}),
                       settingTile(
                         Icons.notifications,
                         "Notification",
-                        false,
+                        Colors.pink,
                         () {},
                       ),
-                      settingTile(Icons.credit_card, "Cards", false, () {}),
+                      settingTile(Icons.credit_card, "Cards", Colors.red, () {}),
                       settingTile(
                         Icons.help_center,
                         "Help Center",
-                        false,
+                        Color(0xFF2E7D32),
                         () {},
                       ),
                       settingTile(
                         Icons.policy,
                         "Terms & Conditions",
-                        false,
+                        Color(0xFF6A1B9A),
                         () {},
                       ),
                     ],
@@ -150,14 +154,14 @@ class AccountScreenState extends State<AccountScreen> {
                 SizedBox(height: 10),
                 Column(
                   children: [
-                    settingTile(Icons.logout, "Log Out", true, () {
+                    settingTile(Icons.logout, "Log Out", Color(0xFF616161), () {
                       context.read<AuthProvider>().logOut();
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (_) => LoginScreen()),
                         (route) => false,
                       );
                     }),
-                    settingTile(Icons.delete, "Delete Account", false, () {}),
+                    settingTile(Icons.delete, "Delete Account", Colors.red, () {}),
                   ],
                 ),
               ],

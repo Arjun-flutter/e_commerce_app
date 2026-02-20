@@ -69,7 +69,9 @@ class _AppHomescreenState extends State<AppHomescreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => CartScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => CartScreen(value: widget.ecommerceApp),
+                      ),
                     );
                   },
                   icon: Icon(Icons.shopping_cart),
@@ -94,118 +96,124 @@ class _AppHomescreenState extends State<AppHomescreen> {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              readOnly: true,
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) =>
-                      SearchScreen(values: widget.ecommerceApp),
-                ),
-              ),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
-                hintText: "Search",
-                filled: true,
-                fillColor: Colors.grey.withOpacity(0.1),
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(7),
-                  child: CircleAvatar(
-                    radius: 3,
-                    backgroundImage: AssetImage("assets/images/logo.jpg"),
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 13.0),
-            child: Text(
-              "Categories",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          SizedBox(
-            height: 70,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: categoryList.length,
-              itemBuilder: (context, index) {
-                final category = categoryList[index];
-                return Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          context.read<ProductProvider>().filterByCategory(
-                            category.apiCategory,
-                          );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CategoriesListScreen(
-                                categoryName: category.name,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.black38,
-                            image: DecorationImage(
-                              image: AssetImage(category.image),
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+      body: product.isLoading
+          ? Center(
+          child: CircularProgressIndicator()
+      )
+          : SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      readOnly: true,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SearchScreen(values: widget.ecommerceApp),
                         ),
                       ),
-                      SizedBox(height: 5),
-                      Text(category.name),
-                    ],
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
+                        hintText: "Search",
+                        filled: true,
+                        fillColor: Colors.grey.withOpacity(0.1),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.all(7),
+                          child: CircleAvatar(
+                            radius: 3,
+                            backgroundImage: AssetImage("assets/images/logo.jpg"),
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
                   ),
-                );
-              },
-              separatorBuilder: (context, index) => const SizedBox(width: 20),
-            ),
-          ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: Text(
+                      "Categories",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  SizedBox(
+                    height: 70,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categoryList.length,
+                      itemBuilder: (context, index) {
+                        final category = categoryList[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 10.0),
+                          child: Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  context
+                                      .read<ProductProvider>()
+                                      .filterByCategory(category.apiCategory);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CategoriesListScreen(
+                                        categoryName: category.name,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black38,
+                                    image: DecorationImage(
+                                      image: AssetImage(category.image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(category.name),
+                            ],
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 20),
+                    ),
+                  ),
 
-          SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.only(left: 13.0),
-            child: Text(
-              "Featured Products",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(height: 15),
-          Expanded(
-            child: product.isLoading
-                ? Center(child: CircularProgressIndicator())
-                : GridView.builder(
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13.0),
+                    child: Text(
+                      "Featured Products",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: product.products.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
+                      crossAxisSpacing: 1,
                       mainAxisSpacing: 5,
-                      childAspectRatio: 0.62,
+                      childAspectRatio: 0.6,
                     ),
                     itemBuilder: (context, index) {
                       final p = product.products[index];
@@ -299,9 +307,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
                                             alpha: 0.5,
                                             blue: 0.8,
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            3,
-                                          ),
+                                          borderRadius: BorderRadius.circular(3),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -389,9 +395,9 @@ class _AppHomescreenState extends State<AppHomescreen> {
                       );
                     },
                   ),
+                ],
+              ),
           ),
-        ],
-      ),
     );
   }
 }

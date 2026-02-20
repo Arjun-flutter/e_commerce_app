@@ -15,16 +15,20 @@ class CategoriesListScreen extends StatelessWidget {
     final products = context.watch<ProductProvider>().visibleProducts;
 
     return Scaffold(
-      appBar: AppBar(title: Text(categoryName), centerTitle: true),
+      appBar: AppBar(
+          title: Text(categoryName),
+          centerTitle: true
+      ),
       body: Expanded(
         child: products.isEmpty
-            ? Center(child: Text("No Products Found"))
+            ? Center(
+            child: Text("No Products Found"))
             : GridView.builder(
                 itemCount: products.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 5,
-                  childAspectRatio: 0.62,
+                  childAspectRatio: 0.6,
                 ),
                 itemBuilder: (context, index) {
                   final p = products[index];

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatelessWidget {
+
+
   const FavoriteScreen({super.key});
 
   @override
@@ -10,16 +12,29 @@ class FavoriteScreen extends StatelessWidget {
     final favprv = context.watch<FavoriteProvider>().favorites;
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: Text("Favorites")),
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text("Favorites",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25
+            ),
+          )
+      ),
       body: favprv.isEmpty
           ? Center(
-              child: Text(
-                "No Favorites Yet",
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/images/favorite_logo.png"),
+                  Text(
+                    "No Favorites Yet",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
             )
           : ListView.builder(
@@ -27,6 +42,7 @@ class FavoriteScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final fp = favprv[index];
                 return Card(
+                  margin: EdgeInsets.symmetric(horizontal: 15),
                   elevation: 2,
                   shadowColor: Colors.orange,
                   child: ListTile(

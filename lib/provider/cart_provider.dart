@@ -14,7 +14,7 @@ class CartProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-   // removeone qty from cart
+   // Remove one qty from cart
 
   void removeOne(Product product) {
     final productId = product.id;

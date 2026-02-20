@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
-Widget settingTile(IconData icon, String title, bool activate, VoidCallback onTap) {
+Widget settingTile(IconData icon, String title, Color color, VoidCallback onTap) {
   return Container(
     margin: EdgeInsets.only(bottom: 8),
     decoration: BoxDecoration(
       color: Colors.grey[100],
       borderRadius: BorderRadius.circular(12),
+
     ),
     child: Column(
       children: [
         ListTile(
-          leading: Icon(
-            icon,
-            color: activate ? Colors.orange : Colors.grey,
-            size: 20,
+          leading: CircleAvatar(
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
           title: Text(
             title, 
@@ -27,7 +30,7 @@ Widget settingTile(IconData icon, String title, bool activate, VoidCallback onTa
              ),
           onTap: onTap,
         ),
-        Divider(height: 1),
+        Divider(height:1),
       ],
     ),
   );

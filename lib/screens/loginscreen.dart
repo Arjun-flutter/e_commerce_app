@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -45,16 +45,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: Text(
                         "Welcome",
-                        style: TextStyle(color: Colors.white, fontSize: 35, shadows: [
-                          Shadow(
-                            blurRadius: 10,
-                            color: Colors.black54,
-                            offset: Offset(2, 2),
-                          ),
-                        ],),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 10,
+                              color: Colors.black54,
+                              offset: Offset(2, 2),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.13),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.15),
                     TextFormField(
                       controller: email,
                       decoration: InputDecoration(
@@ -62,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderSide: BorderSide(color: Colors.orange),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        prefixIcon: Icon(Icons.email, color: Color(0xFF0F3057),),
+                        prefixIcon: Icon(Icons.email, color: Color(0xFF0F3057)),
                         labelText: "Email",
                         filled: true,
                         fillColor: Colors.white,
@@ -85,7 +89,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderSide: BorderSide(color: Colors.orange),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        prefixIcon: Icon(Icons.password,color: Color(0xFF0F3057)),
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: Color(0xFF0F3057),
+                        ),
                         labelText: "Password",
                         filled: true,
                         fillColor: Colors.white,
@@ -119,8 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
                         ),
-                        onPressed: () {
-                          if (auth.logIn(email.text, password.text)) {
+                        onPressed: ()  {
+                          final success =  auth.logIn(email.text, password.text);
+                          if (success) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -131,6 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => HomeScreen()),
                             );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -146,16 +158,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             );
                           }
                         },
-                        child: InkWell(
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(),
-                            ),
-                          ),
-                          child: Text(
-                            "Login",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                        child: Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

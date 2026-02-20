@@ -8,19 +8,22 @@ class ProductServices {
     "https://dummyjson.com/products/category/mens-shoes",
     "https://dummyjson.com/products/category/womens-dresses",
   ];
-  
+
   Future<List<Product>> fetchProducts() async {
     List<Product> allProducts = [];
-    for (String url in urls) {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final List list = data["products"];
-        allProducts.addAll(
-         list.map((e) => Product.fromJson(e)).toList());
-      } else {
-        throw Exception("Api Fail");
+    try {
+      for (String url in urls) {
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final List list = data["products"];
+          allProducts.addAll(list.map((e) => Product.fromJson(e)).toList());
+        } else {
+          throw Exception("Api Fail");
+        }
       }
+    } catch (e) {
+      print("Error fetching products : $e");
     }
     return allProducts;
   }

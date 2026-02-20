@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(height: 60),
                     TextFormField(
                       controller: name,
                       decoration: InputDecoration(
@@ -196,7 +196,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("Already have an account"),
+                          Text(
+                            "Already have an account",
+                            style: TextStyle(fontSize: 16),
+                          ),
                           TextButton(
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute(
@@ -207,7 +210,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               "Login",
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
-                                color: Colors.orange,
+                                color: Colors.black,
+                                fontSize: 16,
                               ),
                             ),
                           ),

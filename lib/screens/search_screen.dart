@@ -75,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     color: Colors.grey.shade300,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  height: size.height * 0.21,
+                                  height: size.height * 0.15,
                                   width: size.width * 0.35,
                                   child: Hero(
                                     tag: p.id,
@@ -189,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 5),
+                                  SizedBox(height: 10),
                                   SizedBox(
                                     height: 32,
                                     child: ElevatedButton.icon(
@@ -219,7 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         );
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
-                                            builder: (_) => const CartScreen(),
+                                            builder: (_) =>  CartScreen(value: widget.values),
                                           ),
                                         );
                                       },

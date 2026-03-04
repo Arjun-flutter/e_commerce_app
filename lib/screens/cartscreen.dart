@@ -42,22 +42,22 @@ class _CartScreenState extends State<CartScreen> {
     context.read<CartProvider>().clearCart();
   }
 
-  void _handlePaymentError(PaymentSuccessResponse response) {
+  void _handlePaymentError(PaymentFailureResponse response) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Payment Failed : ${response.orderId}")),
+      SnackBar(content: Text("Payment Failed : ${response.message}")),
     );
   }
 
-  void _handleExternalWallet(PaymentSuccessResponse response) {
+  void _handleExternalWallet(ExternalWalletResponse response) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("External Wallet : ${response.signature}")),
+      SnackBar(content: Text("External Wallet : ${response.walletName}")),
     );
   }
 
   void _openCheckOut(double totalPrice) {
     var options = {
       'key': 'rzp_test_TYX1Y5HkIoFcsP',
-      'amount': (totalPrice * 10000).toInt(),
+      'amount': (totalPrice * 100).toInt(), // Razorpay expects amount in subunits (paise/cents)
       'name': 'My E-Commerce App',
       'description': 'Order Payment',
       'prefill': {'contact': '9999999999', 'email': 'customer@example.com'},
@@ -85,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
     final totalPrice = cartprv.getTotalPrice(prtprv.products);
     double taxCharge = 5.0;
     double tax = (totalPrice * taxCharge) / 100;
-    double deliveryCharge = totalPrice > 50 ? 0 : 5;
+    double deliveryCharge = (totalPrice > 50 || totalPrice == 0) ? 0 : 5;
     double finalAmount = totalPrice + deliveryCharge + tax;
 
     return Scaffold(
@@ -98,9 +98,10 @@ class _CartScreenState extends State<CartScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset("assets/images/cart_logo.png", height: 180),
+                  Image.asset("assets/images/cart_logo.png", height: 180, errorBuilder: (context, error, stackTrace) => Icon(Icons.shopping_cart, size: 100, color: Colors.grey)),
                   Text(
                     "Your Cart Is Empty \nAdd something from the Products",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.bold,
@@ -108,24 +109,22 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  Container(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 60,
-                          vertical: 10,
-                        ),
-                        backgroundColor: Colors.deepOrange,
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 60,
+                        vertical: 10,
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => HomeScreen()),
-                        );
-                      },
-                      child: Text(
-                        "Shop",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
+                      backgroundColor: Colors.deepOrange,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => HomeScreen()),
+                      );
+                    },
+                    child: Text(
+                      "Shop",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                 ],
@@ -138,7 +137,12 @@ class _CartScreenState extends State<CartScreen> {
                     itemCount: cartProducts.length,
                     itemBuilder: (context, index) {
                       final product = cartProducts[index];
-                      final val = widget.value[index];
+                      // Find the metadata using the original product index to avoid range errors
+                      int originalIndex = prtprv.products.indexOf(product);
+                      final val = (originalIndex >= 0 && originalIndex < widget.value.length) 
+                          ? widget.value[originalIndex] 
+                          : widget.value[0]; 
+
                       return Card(
                         margin: EdgeInsets.symmetric(
                           horizontal: 10,
@@ -148,16 +152,17 @@ class _CartScreenState extends State<CartScreen> {
                         shadowColor: Colors.orange,
                         child: Row(
                           children: [
-                            Container(
-
-                              decoration: BoxDecoration(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
-                              ),
-
-                              child: Image.network(
-                                height: 120,
-                                product.thumbnail,
-                                fit: BoxFit.cover,
+                                child: Image.network(
+                                  product.thumbnail,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) => Icon(Icons.image, size: 100),
+                                ),
                               ),
                             ),
                             Expanded(
@@ -166,13 +171,13 @@ class _CartScreenState extends State<CartScreen> {
                                 children: [
                                   Text(
                                     product.brand,
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(height: 0),
                                   Text(
                                     product.title,
+                                    maxLines: 1,
                                     style: TextStyle(
-                                      color: Colors.grey.shade400,
+                                      color: Colors.grey.shade600,
                                       fontSize: 14,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -192,8 +197,7 @@ class _CartScreenState extends State<CartScreen> {
                                         color: Colors.green,
                                         size: 16,
                                       ),
-                                      Divider(),
-                                      Text("(${val.review})"),
+                                      Text(" (${val.review})"),
                                     ],
                                   ),
                                   Text(
@@ -207,56 +211,35 @@ class _CartScreenState extends State<CartScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      context.read<CartProvider>().removeItem(
-                                        product,
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.orange,
+                            Column(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    context.read<CartProvider>().removeItem(product);
+                                  },
+                                  icon: Icon(Icons.delete, color: Colors.orange),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<CartProvider>().removeOne(product);
+                                      },
+                                      icon: Icon(Icons.remove_circle_outline, color: Colors.orange),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          context
-                                              .read<CartProvider>()
-                                              .removeOne(product);
-                                        },
-                                        icon: Icon(
-                                          Icons.remove,
-                                          color: Colors.orange,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${cartprv.cartItems[product.id]}",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          context
-                                              .read<CartProvider>()
-                                              .addToCart(product);
-                                        },
-                                        icon: Icon(
-                                          Icons.add,
-                                          color: Colors.orange,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    Text(
+                                      "${cartItems[product.id]}",
+                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<CartProvider>().addToCart(product);
+                                      },
+                                      icon: Icon(Icons.add_circle_outline, color: Colors.orange),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -264,146 +247,59 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ),
                 ),
-                Card(
-                  color: Colors.black,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  elevation: 7,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Order Details",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Sub Total",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
+                SafeArea(
+                  child: Card(
+                    color: Colors.black,
+                    margin: EdgeInsets.all(10),
+                    elevation: 7,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _buildPriceRow("Sub Total", "\$${totalPrice.toStringAsFixed(2)}"),
+                          SizedBox(height: 5),
+                          _buildPriceRow("Delivery Charge", deliveryCharge == 0 ? "Free" : "\$${deliveryCharge.toStringAsFixed(2)}"),
+                          SizedBox(height: 5),
+                          _buildPriceRow("Tax (5%)", "\$${tax.toStringAsFixed(2)}"),
+                          Divider(color: Colors.grey, thickness: 1),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Total", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                                  Text("\$${finalAmount.toStringAsFixed(2)}", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                                ],
                               ),
-                            ),
-                            Text(
-                              "\$${totalPrice.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Delivery Charge",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              deliveryCharge == 0
-                                  ? "Free"
-                                  : "\$${deliveryCharge.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Tax",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "\$${tax.toStringAsFixed(2)}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Divider(thickness: 2),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Total",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  "\$${finalAmount.toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 1),
-                              height: 45,
-                              child: ElevatedButton(
+                              ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
+                                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                                 ),
-                                onPressed: () {
-                                  _openCheckOut(finalAmount);
-                                },
-                                child: Text(
-                                  "Checkout",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
+                                onPressed: () => _openCheckOut(finalAmount),
+                                child: Text("Checkout", style: TextStyle(color: Colors.white, fontSize: 18)),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildPriceRow(String title, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.bold)),
+        Text(value, style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+      ],
     );
   }
 }

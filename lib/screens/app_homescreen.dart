@@ -47,7 +47,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
           text: TextSpan(
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 24,
+              fontSize: 26,
               fontWeight: FontWeight.bold,
               fontFamily: 'Poppins',
             ),

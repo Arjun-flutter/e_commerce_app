@@ -1,6 +1,5 @@
 import 'package:ecommer_app/models/appmodel.dart';
 import 'package:ecommer_app/provider/cart_provider.dart';
-import 'package:ecommer_app/provider/favorite_provider.dart';
 import 'package:ecommer_app/provider/product_provider.dart';
 import 'package:ecommer_app/screens/detailed_page.dart';
 import 'package:flutter/material.dart';

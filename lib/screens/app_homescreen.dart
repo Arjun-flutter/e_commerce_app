@@ -1,12 +1,12 @@
 import 'package:ecommer_app/models/appmodel.dart';
-import 'package:ecommer_app/models/category.dart';
 import 'package:ecommer_app/provider/cart_provider.dart';
 import 'package:ecommer_app/provider/favorite_provider.dart';
 import 'package:ecommer_app/provider/product_provider.dart';
 import 'package:ecommer_app/screens/cartscreen.dart';
-import 'package:ecommer_app/screens/categorieslistscreen.dart';
 import 'package:ecommer_app/screens/detailed_page.dart';
 import 'package:ecommer_app/screens/search_screen.dart';
+import 'package:ecommer_app/widgets/home_banner.dart';
+import 'package:ecommer_app/widgets/home_categories.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,36 +31,31 @@ class _AppHomescreenState extends State<AppHomescreen> {
     final productProvider = context.watch<ProductProvider>();
     final cartProvider = context.watch<CartProvider>();
     final screenWidth = MediaQuery.of(context).size.width;
+    final primaryColor = Theme.of(context).primaryColor;
 
     // Responsive grid configuration
     int crossAxisCount = screenWidth > 900 ? 4 : (screenWidth > 600 ? 3 : 2);
     double childAspectRatio = screenWidth > 400 ? 0.65 : 0.6;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         automaticallyImplyLeading: false,
         title: RichText(
           text: TextSpan(
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
             ),
             children: [
-              TextSpan(
-                text: 'Shop',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
+              const TextSpan(text: 'Shop', style: TextStyle(fontStyle: FontStyle.italic)),
               TextSpan(
                 text: 'ora',
-                style: TextStyle(
-                  color: Color(0xFFFF6A00),
-                  fontStyle: FontStyle.italic,
-                ),
+                style: TextStyle(color: primaryColor, fontStyle: FontStyle.italic),
               ),
             ],
           ),
@@ -80,23 +75,23 @@ class _AppHomescreenState extends State<AppHomescreen> {
                       ),
                     );
                   },
-                  icon: Icon(Icons.shopping_cart, size: 28),
+                  icon: const Icon(Icons.shopping_cart_outlined, size: 28, color: Colors.black),
                 ),
                 if (cartProvider.cartItems.isNotEmpty)
                   Positioned(
                     right: 5,
                     top: 5,
                     child: Container(
-                      padding: EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.deepOrange,
+                        color: primaryColor,
                         shape: BoxShape.circle,
                       ),
-                      constraints: BoxConstraints(minWidth: 18, minHeight: 18),
+                      constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
                       child: Text(
                         "${cartProvider.cartItems.length}",
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -110,113 +105,70 @@ class _AppHomescreenState extends State<AppHomescreen> {
         ],
       ),
       body: productProvider.isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator(color: primaryColor))
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Search Bar
                   Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: TextField(
-                      readOnly: true,
+                    child: InkWell(
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
                               SearchScreen(values: widget.ecommerceApp),
                         ),
                       ),
-                      decoration: InputDecoration(
-                        isDense: true,
-                        hintText: "Search Products...",
-                        filled: true,
-                        fillColor: Colors.grey.withOpacity(0.1),
-                        prefixIcon: Icon(Icons.search, color: Colors.grey),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.search, color: Colors.grey),
+                            SizedBox(width: 12),
+                            Text("Search Products...", style: TextStyle(color: Colors.grey)),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      "Categories",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 12),
-                  SizedBox(
-                    height: 100,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categoryList.length,
-                      itemBuilder: (context, index) {
-                        final category = categoryList[index];
-                        return Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                context
-                                    .read<ProductProvider>()
-                                    .filterByCategory(category.apiCategory);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => CategoriesListScreen(
-                                      categoryName: category.name,
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: 60,
-                                width: 60,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: AssetImage(category.image),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              category.name,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) => SizedBox(width: 20),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
+
+                  // Promotional Banner
+                  const HomeBanner(),
+
+                  const SizedBox(height: 10),
+
+                  // Categories Section (Separated into a Widget)
+                  const HomeCategories(),
+
+                  const Padding(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 8,
                     ),
                     child: Text(
                       "Featured Products",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   GridView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: productProvider.products.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: crossAxisCount,
@@ -226,7 +178,6 @@ class _AppHomescreenState extends State<AppHomescreen> {
                     ),
                     itemBuilder: (context, index) {
                       final p = productProvider.products[index];
-                      // Use modulo to avoid RangeError if metadata list is shorter than products
                       final appData = widget
                           .ecommerceApp[index % widget.ecommerceApp.length];
 
@@ -242,12 +193,12 @@ class _AppHomescreenState extends State<AppHomescreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: Offset(0, 4),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
                               ),
                             ],
                           ),
@@ -258,8 +209,8 @@ class _AppHomescreenState extends State<AppHomescreen> {
                                 child: Stack(
                                   children: [
                                     ClipRRect(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(15),
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(20),
                                       ),
                                       child: Hero(
                                         tag: p.id,
@@ -272,118 +223,75 @@ class _AppHomescreenState extends State<AppHomescreen> {
                                       ),
                                     ),
                                     Positioned(
-                                      top: 14,
-                                      right: 12,
+                                      top: 10,
+                                      right: 10,
                                       child: Consumer<FavoriteProvider>(
                                         builder: (context, fav, _) {
                                           final isFav = fav.isFavorite(p);
                                           return GestureDetector(
                                             onTap: () => fav.toggleFavorite(p),
                                             child: Container(
-                                              height: 25,
-                                              width: 25,
+                                              padding: const EdgeInsets.all(6),
                                               decoration: BoxDecoration(
-                                                color: Colors.black26,
-                                                borderRadius: BorderRadius.circular(20),
+                                                color: Colors.white.withOpacity(0.8),
+                                                shape: BoxShape.circle,
                                               ),
-                                              child: Center(
-                                                child: Icon(
-                                                  isFav ? Icons.favorite : Icons.favorite_outline,
-                                                  size: 18,
-                                                  color: isFav ? Colors.red : Colors.orange,
-                                                ),
+                                              child: Icon(
+                                                isFav ? Icons.favorite : Icons.favorite_border,
+                                                size: 18,
+                                                color: isFav ? Colors.red : Colors.grey,
                                               ),
                                             ),
                                           );
                                         },
                                       ),
                                     ),
-                                    Positioned(
-                                      bottom: 8,
-                                      left: 8,
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.9),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              p.rating.toStringAsFixed(1),
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                              size: 12,
-                                            ),
-                                            Text(
-                                              " (${appData.review})",
-                                              style: TextStyle(fontSize: 10),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(12.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       p.brand,
                                       style: TextStyle(
+                                        color: primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                    ),
+                                    Text(
+                                      p.title,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text(
-                                      p.title,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 6),
+                                    const SizedBox(height: 4),
                                     Row(
                                       children: [
+                                        const Icon(Icons.star, color: Colors.amber, size: 14),
                                         Text(
-                                          "\$${p.price.toInt()}",
-                                          style: TextStyle(
-                                            color: Colors.deepOrange,
+                                          " ${p.rating.toStringAsFixed(1)}",
+                                          style: const TextStyle(
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 16,
                                           ),
                                         ),
-                                        SizedBox(width: 6),
-                                        if (p.discountPercentage > 0)
-                                          Text(
-                                            "\$${(p.price / (1 - p.discountPercentage / 100)).toInt()}",
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              fontSize: 12,
-                                            ),
-                                          ),
                                       ],
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      "\$${p.price.toInt()}",
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -394,7 +302,7 @@ class _AppHomescreenState extends State<AppHomescreen> {
                       );
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

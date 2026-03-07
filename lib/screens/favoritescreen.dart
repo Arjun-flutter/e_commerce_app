@@ -42,7 +42,7 @@ class FavoriteScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final fp = favprv[index];
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   elevation: 2,
                   shadowColor: Colors.orange,
                   child: ListTile(

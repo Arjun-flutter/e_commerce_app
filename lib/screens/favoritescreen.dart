@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteScreen extends StatelessWidget {
-
-
   const FavoriteScreen({super.key});
 
   @override
@@ -13,14 +11,13 @@ class FavoriteScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-          centerTitle: true,
-          title: Text("Favorites",
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25
-            ),
-          )
+        centerTitle: true,
+        title: Text(
+          "Favorites",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+        ),
       ),
+
       body: favprv.isEmpty
           ? Center(
               child: Column(
@@ -29,10 +26,7 @@ class FavoriteScreen extends StatelessWidget {
                   Image.asset("assets/images/favorite_logo.png"),
                   Text(
                     "No Favorites Yet",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                 ],
               ),
@@ -48,11 +42,14 @@ class FavoriteScreen extends StatelessWidget {
                   child: ListTile(
                     leading: Image.network(fp.thumbnail),
                     title: Text(fp.title),
-                    subtitle: Text("\$${fp.price}", style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFFFF6A00),
-                      fontWeight: FontWeight.bold,
-                    ),),
+                    subtitle: Text(
+                      "\$${fp.price}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFFFF6A00),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     trailing: IconButton(
                       onPressed: () {
                         context.read<FavoriteProvider>().toggleFavorite(fp);
